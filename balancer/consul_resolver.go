@@ -51,7 +51,7 @@ func NewConsulResolver(
 		serviceRatio: serviceRatio,
 		cpuThreshold: cpuThreshold,
 		done:         false,
-		cpuUsage:     50,
+		cpuUsage:     70,
 		zone:         zone,
 	}
 
