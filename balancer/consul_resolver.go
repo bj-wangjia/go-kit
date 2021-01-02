@@ -277,6 +277,7 @@ func (r *ConsulResolver) updateServiceZone() error {
 
 	var localZone ServiceZone
 	var otherZone ServiceZone
+	local := make(map[string]bool)
 
 	for _, service := range services {
 		balanceFactor := 100
@@ -296,6 +297,14 @@ func (r *ConsulResolver) updateServiceZone() error {
 			BalanceFactor: balanceFactor,
 			Zone:          zone,
 		}
+		if _, ok := local[node.Address]; ok {
+			buf, _ := json.Marshal(service.Service)
+			if r.logger != nil {
+				r.logger.Infof("duplicated node [%s], lastIndex [%v]", string(buf))
+			}
+			continue
+		}
+		local[node.Address] = true
 		if zone == r.zone {
 			localZone.Nodes = append(localZone.Nodes, node)
 			localZone.FactorMax += node.BalanceFactor
