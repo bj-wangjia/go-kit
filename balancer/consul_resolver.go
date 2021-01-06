@@ -230,7 +230,8 @@ func (r *ConsulResolver) updateCPUUsage() error {
 
 func (r *ConsulResolver) updateFactorThreshold() error {
 	services, metainfo, err := r.client.Health().Service(r.myService, "", true, &api.QueryOptions{
-		WaitIndex: r.myLastIndex,
+		WaitIndex:  r.myLastIndex,
+		AllowStale: true,
 	})
 	if err != nil {
 		return fmt.Errorf("error retrieving instances from Consul: %v", err)
@@ -268,7 +269,8 @@ func (r *ConsulResolver) updateFactorThreshold() error {
 
 func (r *ConsulResolver) updateServiceZone() error {
 	services, metainfo, err := r.client.Health().Service(r.service, "", true, &api.QueryOptions{
-		WaitIndex: r.lastIndex,
+		WaitIndex:  r.lastIndex,
+		AllowStale: true,
 	})
 	if err != nil {
 		return fmt.Errorf("error retrieving instances from Consul: %v", err)
