@@ -282,6 +282,13 @@ func (r *ConsulResolver) updateServiceZone() error {
 	local := make(map[string]bool)
 
 	for _, service := range services {
+		if service.Service.Address == "" || service.Service.Port == 0 {
+			if r.logger != nil {
+				buf, _ := json.Marshal(service.Service)
+				r.logger.Infof("invalid addr [%s]", string(buf))
+			}
+			continue
+		}
 		balanceFactor := 100
 		zone := "unknown"
 		if balanceFactorStr, ok := service.Service.Meta["balanceFactor"]; ok {
